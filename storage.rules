@@ -1,0 +1,30 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Strict Default Deny: No public access anywhere
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // User-Scoped Meal Photos (< 1 MB, image/jpeg, image/png, image/webp)
+    match /users/{userId}/meals/{mealId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null 
+        && request.auth.uid == userId
+        && request.resource.size < 1 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // User-Scoped Avatars (< 1 MB, image/jpeg, image/png, image/webp)
+    match /users/{userId}/avatars/{avatarId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null 
+        && request.auth.uid == userId
+        && request.resource.size < 1 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

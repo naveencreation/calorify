@@ -1,6 +1,18 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
-  }
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@ds/*": ["src/design-system/*"],
+      "@ds": ["src/design-system/index.ts"],
+      "@core/*": ["src/core/*"],
+      "@features/*": ["src/features/*"],
+      "@tests/*": ["tests/*"],
+      "@/*": ["src/*"]
+    },
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["**/*.ts", "**/*.tsx", "plugins/**/*.js"]
 }
